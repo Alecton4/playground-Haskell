@@ -8,10 +8,12 @@ doubleMe x = x + x
 -- doubleUs x y = x*2 + y*2
 doubleUs x y = doubleMe x + doubleMe y
 
--- The difference between Haskell's if statement and if statements in imperative languages is that
--- the else part is mandatory in Haskell.
--- In imperative languages you can just skip a couple of steps if the condition isn't satisfied
--- but in Haskell every expression and function must return something.
+{-
+The difference between Haskell's if statement and if statements in imperative languages is that
+the else part is mandatory in Haskell.
+In imperative languages you can just skip a couple of steps if the condition isn't satisfied
+but in Haskell every expression and function must return something.
+-}
 
 -- Another thing about the if statement in Haskell is that it is an expression.
 doubleSmallNumber x =
@@ -197,10 +199,12 @@ calcBmis xs = [bmi w h | (w, h) <- xs]
   where
     bmi weight height = weight / height ^ 2
 
--- `where` bindings can also be nested.
--- It's a common idiom to make a function and define some helper function in its `where` clause
--- and then to give those functions helper functions as well,
--- each with its own `where` clause.
+{-
+`where` bindings can also be nested.
+It's a common idiom to make a function and define some helper function in its `where` clause
+and then to give those functions helper functions as well,
+each with its own `where` clause.
+-}
 
 -- ================================
 -- `let` bindings
@@ -229,15 +233,19 @@ calcBmis'' xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2, bmi >= 25.0]
 
 -- calcBmis'' xs = [bmi | (w, h) <- xs, bmi >= 25.0, let bmi = w / h ^ 2]
 
--- We omitted the `in` part of the `let` binding when we used them in list comprehensions
--- because the visibility of the names is already predefined there.
--- However, we could use a `let` in binding in a predicate
--- and the names defined would only be visible to that predicate.
+{-
+We omitted the `in` part of the `let` binding when we used them in list comprehensions
+because the visibility of the names is already predefined there.
+However, we could use a `let` in binding in a predicate
+and the names defined would only be visible to that predicate.
+-}
 
--- Since `let` bindings are expressions and are fairly local in their scope,
--- they can't be used across guards.
--- Some people prefer `where` bindings because the names come after the function they're being used in.
--- That way, the function body is closer to its name and type declaration and to some that's more readable.
+{-
+Since `let` bindings are expressions and are fairly local in their scope,
+they can't be used across guards.
+Some people prefer `where` bindings because the names come after the function they're being used in.
+That way, the function body is closer to its name and type declaration and to some that's more readable.
+-}
 
 -- ================================
 -- case expressions
