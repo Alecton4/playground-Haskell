@@ -239,7 +239,7 @@ Theorem ID1.  P&Q |- P&Q
 >   check_proof
 >     (Theorem [P `And` Q] (P `And` Q))
 >     (ID (Assume (P `And` Q)) (P `And` Q))
- 
+
 
 Contradiction
 ~~~~~~~~~~~~~
@@ -421,11 +421,11 @@ propositions
 >    (/=) x y = not (x == y)                                              -- *1
 
 ----------------------------- auxilary functions ---------------------------- *
- 
+
   'setelem' was deleted (use 'elem' instead)                              -- *
   'jsubset' was deleted, and it's not needed anymore                      -- *
 
-> union :: Eq a => [a] -> [a] -> [a]                                       
+> union :: Eq a => [a] -> [a] -> [a]
 > union xs ys = xs ++ [y | y <- ys, notElem y xs]                         -- *
 
 > setdif :: Eq a => [a] -> [a] -> [a]
@@ -739,7 +739,7 @@ Use assumes that the theorem is correct
 >              ++ "with the assumptions " ++ show concls
 >              ++ " and the conclusion ("++ show concl ++")\n"
 >   in if not oks then (False, msgs, udas, concl)
->      else if (usetheorem theo concls concl) then 
+>      else if (usetheorem theo concls concl) then
 >             (True, msgs, udas, concl)
 >      else (False, msgs++[err2], udas, concl)
 
@@ -761,7 +761,7 @@ UseTh needs the proof of a theorem to check if it's valid and then can be used.
 >   in if not theook
 >        then (False, msgs++[err1], udas, concl)
 >      else if not oks then (False, msgs, udas, concl)
->      else if (usetheorem theo concls concl) then 
+>      else if (usetheorem theo concls concl) then
 >             (True, msgs, udas, concl)
 >      else (False, msgs++[err2], udas, concl)
 
@@ -777,7 +777,7 @@ UseDB checks if a theorem can be used by looking for it in a data-base
 >   in if not (findtheorem db theo)
 >        then (False, msgs++[err1], udas, concl)
 >      else if not oks then (False, msgs, udas, concl)
->      else if (usetheorem theo concls concl) then 
+>      else if (usetheorem theo concls concl) then
 >             (True, msgs, udas, concl)
 >      else (False, msgs++[err2], udas, concl)
 
@@ -819,7 +819,7 @@ The 2 list are assumed to be of the same length.
 >   where
 >     unifrec :: [Prop] -> [Prop] -> (Bool, [(Prop, Prop)])
 >     unifrec [] [] = (True, initialpairs)
->     unifrec (x:xs) (y:ys) = 
+>     unifrec (x:xs) (y:ys) =
 >       let (okxy, _, unifxy) = unif x y
 >           (oks, unifs) = if okxy then (unifrec xs ys)
 >                          else (False, [])
@@ -829,7 +829,7 @@ The 2 list are assumed to be of the same length.
 
 the function 'allunifiactions' is a kind of extended version of 'unification':
 now, the order of the propositions does not matter, since every permutation may
-be considered. 
+be considered.
 
 > allunifications :: [(Prop, Prop)] -> [Prop] -> [Prop] -> Bool
 > allunifications initialpairs l1 l2 =
@@ -840,7 +840,7 @@ be considered.
 >     allunifrec []    ([],[]) pairs = (True, pairs)
 >     allunifrec (_:_) (_, []) _     = (False, [])
 >
->     allunifrec (x:xs) (prev, (y:ys)) pairs = 
+>     allunifrec (x:xs) (prev, (y:ys)) pairs =
 >           let (okxy, eqxy, unifxy) = unif x y
 >           in if okxy then
 >                let (oku, unifu) = addunif pairs unifxy
@@ -852,7 +852,7 @@ be considered.
 >                else trynext
 >           where
 >             trynext = allunifrec (x:xs) (prev++[y], ys) pairs
->    
+>
 >     allunifrec _ _ _ = (False, [])
 
 unification of 2 propositions: the function 'unif'
@@ -918,13 +918,13 @@ for TRUE and Not, their definitions are used.
 >     (_,         Not y)     -> comparison a (y `Imp` FALSE)
 >     (TRUE,      _)         -> comparison (FALSE `Imp` FALSE) b
 >     (_,         TRUE)      -> comparison a (FALSE `Imp` FALSE)
-> 
+>
 >      -- equality:
 >     (FALSE,     FALSE)     -> Equal
 >     (Imp x1 x2, Imp y1 y2) -> comparison2 x1 y1 x2 y2
 >     (Or x1 x2,  Or y1 y2)  -> comparison2 x1 y1 x2 y2
 >     (And x1 x2, And y1 y2) -> comparison2 x1 y1 x2 y2
-> 
+>
 >     -- inequality (from the greatest to the least):
 >     (And _ _,   _)         -> Greater
 >     (_,         And _ _)   -> Lesser
@@ -934,7 +934,7 @@ for TRUE and Not, their definitions are used.
 >     (_,         Imp _ _)   -> Lesser
 >     (FALSE,     _)         -> Greater
 >     (_,         FALSE)     -> Lesser
-> 
+>
 >     -- equality of tree (2 variables):
 >     (_,         _)         -> Equal
 >  where
@@ -970,7 +970,7 @@ theorems.
 >     (x:xs) -> x == s || findtheorem xs t
 >   where s = namefor t
 
-the function 'namefor' give a name (String) to a theorem, which does not 
+the function 'namefor' give a name (String) to a theorem, which does not
 depend on the name given to the variables of the theorem. For example,
 (Theorem [A,B] (B `And` A)) and (Theorem [C,D] (D `And` C)) will receive
 the same name.
@@ -1000,7 +1000,7 @@ the same name.
 >     write [] _ = ""
 >     write (x:[]) names = writeprop x names
 >     write (x:xs) names = writeprop x names ++ ", " ++ write xs names
->     
+>
 >     writeprop :: Prop -> [(Prop,Int)] -> String
 >     writeprop x names =
 >       case x of
@@ -1071,9 +1071,9 @@ the 2 following functions convert a String into a data-base, and vice-versa
 note that subset does not reject non-sets
 
 > subset :: (Eq a, Show a) => Set a -> Set a -> Bool
-> subset set1 set2 
+> subset set1 set2
 >      = foldr f True set1
->        where 
+>        where
 >        f x sofar = if elem x set2 then sofar else False
 
 > -- note that properSubset does not reject non-sets
@@ -1083,21 +1083,21 @@ note that subset does not reject non-sets
 
 > -- note that setEq does not reject non-sets
 > setEq :: (Eq a, Show a) => Set a -> Set a -> Bool
-> setEq set1 set2 
+> setEq set1 set2
 >      = (set1 `subset` set2) /\ (set2 `subset` set1)
 
 > normalForm :: (Eq a, Show a) => [a] -> Bool
 > normalForm set = length (normalizeSet set) == length set
 
 > normalizeSet :: Eq a => [a] -> Set a
-> normalizeSet elts 
+> normalizeSet elts
 >      = foldr f [] elts
 >        where
->        f x sofar 
+>        f x sofar
 >          = if x `elem` sofar then sofar else x:sofar
 
 > (+++) :: (Eq a, Show a) => Set a -> Set a -> Set a
-> (+++) set1 set2 
+> (+++) set1 set2
 >      = if not (normalForm set1)
 >           then errfun "+++" set1 "set"
 >           else if not (normalForm set2)
@@ -1113,7 +1113,7 @@ note that subset does not reject non-sets
 >                else [x | x <- set1, (x `elem` set2)]
 
 > (~~~) :: (Eq a, Show a) => Set a -> Set a -> Set a
-> (~~~) set1 set2 
+> (~~~) set1 set2
 >      =  if not (normalForm set1)
 >            then errfun "~~~" set1 "set"
 >            else if not (normalForm set1)
@@ -1157,7 +1157,8 @@ note that subset does not reject non-sets
 
 > factorial :: Integer -> Integer
 > factorial 0 = 1
-> factorial (n+1) = (n+1) * factorial n
+> -- factorial (n+1) = (n+1) * factorial n
+> factorial n = n * factorial (n-1)
 
 > quicksort :: Ord a => [a] -> [a]
 > quicksort [] = []
@@ -1315,7 +1316,7 @@ note that subset does not reject non-sets
 >           in [a | (a,b) <- relation, a == b && elem a set] == []
 
 > lessThan_N100 :: Digraph Int
-> lessThan_N100 
+> lessThan_N100
 >  = let set = [1..100]
 >    in (set,[(a,b) | a <- set, b <- set, a < b])
 
@@ -1340,7 +1341,7 @@ note that subset does not reject non-sets
 >    in (set,[(a,b) | a <- set, b <- set, a > b \/ a == b])
 
 > notEq_N100 :: Digraph Int
-> notEq_N100 
+> notEq_N100
 >  = let set = [1..100]
 >    in (set,[(a,b) | a <- set, b <- set, not (a == b)])
 
@@ -1351,7 +1352,7 @@ note that subset does not reject non-sets
 >        else
 >        let (set, relation) = digraph
 >        in
->        and [(elem (a,b) relation) ==> (elem (b,a) relation)         
+>        and [(elem (a,b) relation) ==> (elem (b,a) relation)
 >             | a <- set, b <- set]
 
 > isAntisymmetric ::  (Eq a, Show a) => Digraph a -> Bool
@@ -1361,7 +1362,7 @@ note that subset does not reject non-sets
 >        else
 >        let (set, relation) = digraph
 >        in
->        and [((elem (x,y) relation) /\ (elem (y,x) relation))          
+>        and [((elem (x,y) relation) /\ (elem (y,x) relation))
 >             ==> (x == y) | x <- set, y <- set]
 
 > isTransitive :: (Eq a, Show a) => Digraph a -> Bool
@@ -1371,13 +1372,13 @@ note that subset does not reject non-sets
 >        else
 >        let (set, relation) = digraph
 >        in
->        and [((elem (x,y) relation) /\ (elem (y,z) relation))          
->            ==> (elem (x,z) relation)                
+>        and [((elem (x,y) relation) /\ (elem (y,z) relation))
+>            ==> (elem (x,z) relation)
 >            | x <- set, y <- set, z <- set]
 
-> relationalComposition :: (Show a, Eq b, Show c, Show b, Eq c, Eq a) => 
+> relationalComposition :: (Show a, Eq b, Show c, Show b, Eq c, Eq a) =>
 >                              Set (a,b) -> Set (b,c) -> Set (a,c)
-> relationalComposition set1 set2 
+> relationalComposition set1 set2
 >  = if not (normalForm set1)
 >       then errfun "relationalComposition" set1 "relation"
 >    else
@@ -1387,7 +1388,7 @@ note that subset does not reject non-sets
 >    normalizeSet [(a,c) | (a,b) <- set1, (b', c) <- set2, b == b']
 
 > equalityRelation :: (Eq a, Show a) => Set a -> Relation a
-> equalityRelation set 
+> equalityRelation set
 >  = if not (normalForm set)
 >       then errfun "equalityRelation" set "set"
 >    else [(e,e) | e <- set]
@@ -1399,10 +1400,10 @@ note that subset does not reject non-sets
 >    else
 >    relationalPowerLoop digraph power
 >    where
->    relationalPowerLoop (set,relation) 0 
+>    relationalPowerLoop (set,relation) 0
 >      = equalityRelation set
->    relationalPowerLoop (set,relation) n 
->      = relationalComposition 
+>    relationalPowerLoop (set,relation) n
+>      = relationalComposition
 >         (relationalPowerLoop (set,relation) (n-1)) relation
 
 > reflexiveClosure :: (Eq a, Show a) => Digraph a -> Digraph a
@@ -1431,14 +1432,14 @@ note that subset does not reject non-sets
 >       then errfun "transitiveClosure" digraph "digraph"
 >    else
 >    let (set, relation) = digraph
->        len = length set   
->        loop n power     
->             = if (n > len) 
->                  then []          
->                  else power +++ (loop (n+1) 
+>        len = length set
+>        loop n power
+>             = if (n > len)
+>                  then []
+>                  else power +++ (loop (n+1)
 >                                  (relationalComposition power relation))
 >    in
->    (set, loop 1 relation)   
+>    (set, loop 1 relation)
 
 > isPartialOrder :: (Eq a, Show a) => Digraph a -> Bool
 > isPartialOrder digraph
@@ -1452,23 +1453,23 @@ note that subset does not reject non-sets
 > remTransArcs :: (Eq a, Show a) => Relation a -> Relation a
 > remTransArcs relation
 >  = relation ~~~ [(x,z) | (x,y) <- relation, (y',z) <- relation, y == y']
-> 
+>
 > remRelArcs ::  (Eq a, Show a) => Relation a -> Relation a
 > remRelArcs relation = relation ~~~ [(x,y) | (x,y) <- relation, x == y]
-> 
+>
 > remReflexTransArcs :: (Eq a, Show a) => Relation a -> Relation a
 > remReflexTransArcs relation
 >  = remTransArcs (remRelArcs relation)
 
 > isWeakest :: (Eq a, Show a) => Relation a -> a -> Bool
-> isWeakest relation a 
+> isWeakest relation a
 >        = if not (normalForm relation)
 >             then errfun "isWeakest" relation "relation"
 >          else
 >          and [a /= c | (b,c) <- remReflexTransArcs relation]
 
 > isGreatest :: (Eq a, Show a) => Relation a -> a -> Bool
-> isGreatest set a 
+> isGreatest set a
 >        = if not (normalForm set)
 >             then errfun "isGreatest" set "relation"
 >          else
@@ -1503,13 +1504,13 @@ note that subset does not reject non-sets
 > isChain :: (Eq a, Show a) => Set (a,a) -> Bool
 > isChain rel
 >  = let loop [] = True
->        loop ((a,b):ps) 
+>        loop ((a,b):ps)
 >          = let new_rel = [pr | pr <- rel, not (pr == (a,b))]
 >            in
->            if (elem a (codomain new_rel) || elem b (domain new_rel)) 
+>            if (elem a (codomain new_rel) || elem b (domain new_rel))
 >               then loop ps
 >               else False
->    in loop rel 
+>    in loop rel
 
 > isLinearOrder :: (Eq a, Show a) => Digraph a -> Bool
 > isLinearOrder digraph
@@ -1525,14 +1526,14 @@ note that subset does not reject non-sets
 > removeFromRelation :: (Eq a, Show a) => a -> Set (a,a) -> Set (a,a)
 > removeFromRelation elt relation
 >      = loop relation
->        where   loop [] = []   
->                loop ((a,b):relation) = if ((elt == a) || (elt == b))        
+>        where   loop [] = []
+>                loop ((a,b):relation) = if ((elt == a) || (elt == b))
 >                                           then loop relation
 >                                           else (a,b) : loop relation
 
 > removeElt :: (Eq a, Show a) => a -> Digraph a -> Digraph a
-> removeElt elt (set, relation) 
->      = (set ~~~ [elt],    
+> removeElt elt (set, relation)
+>      = (set ~~~ [elt],
 >         removeFromRelation elt relation)
 
 > topsort :: (Eq a, Show a) => Digraph a -> Set a
@@ -1543,8 +1544,8 @@ note that subset does not reject non-sets
 >    let topsortLoop ([], relation) = []
 >        topsortLoop (set, []) = []
 >        topsortLoop digraph
->         = min_elt : topsortLoop (removeElt min_elt digraph)   
->           where   
+>         = min_elt : topsortLoop (removeElt min_elt digraph)
+>           where
 >           min_elt = head (weakestSet digraph)
 >    in topsortLoop digraph
 
@@ -1554,7 +1555,7 @@ note that subset does not reject non-sets
 >         then errfun "isEquivalenceRelation" digraph "digraph"
 >      else
 >      let (set,relation) = digraph
->      in 
+>      in
 >      (isReflexive digraph /\
 >        (isSymmetric digraph /\ isTransitive digraph))
 
@@ -1563,9 +1564,9 @@ note that subset does not reject non-sets
 			Chapter 9.  Functions
 -------------------------------------------------------------------------------
 
-> isFun :: (Eq a, Eq b, Show a, Show b) => 
+> isFun :: (Eq a, Eq b, Show a, Show b) =>
 >              Set a -> Set b -> Set (a,FunVals b) -> Bool
-> isFun f_domain f_codomain fun 
+> isFun f_domain f_codomain fun
 >       = let actual_domain = domain fun
 >         in normalForm actual_domain /\
 >            setEq actual_domain f_domain
@@ -1583,34 +1584,34 @@ note that subset does not reject non-sets
 > imageValues f_codomain
 >      = [v | (Value v) <- f_codomain]
 
-> isSurjective :: (Eq a, Eq b, Show a, Show b) => Set a -> 
+> isSurjective :: (Eq a, Eq b, Show a, Show b) => Set a ->
 >                      Set b -> Set (a,FunVals b) -> Bool
 > isSurjective f_domain f_codomain fun
->       = isFun f_domain f_codomain fun /\ 
+>       = isFun f_domain f_codomain fun /\
 >         setEq f_codomain (normalizeSet (imageValues (codomain fun)))
 
-> isInjective :: (Eq a, Eq b, Show a, Show b) => Set a -> 
+> isInjective :: (Eq a, Eq b, Show a, Show b) => Set a ->
 >                   Set b -> Set (a,FunVals b) -> Bool
-> isInjective f_domain f_codomain fun 
+> isInjective f_domain f_codomain fun
 >       = let fun_image = imageValues (codomain fun)
 >         in isFun f_domain f_codomain fun /\
 >            normalForm fun_image
 
-> functionalComposition :: (Eq a, Eq b, Eq c, Show a, Show b, Show c) => 
->                           Set (a,FunVals b) -> Set (b,FunVals c) -> 
+> functionalComposition :: (Eq a, Eq b, Eq c, Show a, Show b, Show c) =>
+>                           Set (a,FunVals b) -> Set (b,FunVals c) ->
 >                              Set (a,FunVals c)
-> functionalComposition f1 f2 
+> functionalComposition f1 f2
 >  = normalizeSet [(a,c) | (a,Value b) <- f1, (b', c) <- f2, b == b']
 
 > isBijective :: (Eq a, Eq b, Show a, Show b) => Set a -> Set b
 >                     -> Set (a,FunVals b) -> Bool
-> isBijective f_domain f_codomain fun 
->       = isSurjective f_domain f_codomain fun /\ 
->         isInjective f_domain f_codomain fun 
+> isBijective f_domain f_codomain fun
+>       = isSurjective f_domain f_codomain fun /\
+>         isInjective f_domain f_codomain fun
 
 > isPermutation
 >   :: (Eq a, Show a) => Set a -> Set a -> Set (a,FunVals a) -> Bool
-> isPermutation f_domain f_codomain fun 
+> isPermutation f_domain f_codomain fun
 >       = isBijective f_domain f_codomain fun /\
 >         setEq f_domain f_codomain
 
@@ -1705,13 +1706,3 @@ fullAdd (True,  True)  True
                       (True,False),(True,True),(True,True)]
     The expected result is
        (False, [True,False,False,False,True,False])
-
-
-
-
-
-
-
-
-
-
