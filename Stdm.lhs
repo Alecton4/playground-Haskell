@@ -457,7 +457,7 @@ propositions
 
 > check_proof_with_db :: TheoremDB -> Theorem -> Proof -> IO (Bool)       -- *2
 > check_proof_with_db db (Theorem thas thc) proof =                       -- *2
->   do let (valid, ms, uda, concl) = traverse db proof                    -- *2
+>   do let (valid, ms, uda, concl) = traverse' db proof                    -- *2
 >      let missingassum = setdif uda thas                                 -- *
 >      let uselessassum = setdif thas uda                                 -- *
 >      let allok = valid && (missingassum == []) && (concl == thc)        -- *
@@ -487,7 +487,7 @@ propositions
 >                                    putmessages ms                       -- *
 >      return (allok)                                                     -- *2
 
-The real work is performed in the traverse function, which has a
+The real work is performed in the traverse' function, which has a
 separate case for checking each inference rule.  Nearly all the
 complexity in the following code results from an attempt to provide
 meaningful error messages; if the aim were merely to decide whether a
@@ -495,13 +495,13 @@ proof is valid, then the implementation could rely much more on
 Haskell's pattern matching mechanism, and everything would be much
 more concise.
 
-> traverse :: TheoremDB -> Proof -> Status                                -- *2
+> traverse' :: TheoremDB -> Proof -> Status                                -- *2
 
-> traverse _ (Assume a) = (True, [], [a], a)                              -- *2
+> traverse' _ (Assume a) = (True, [], [a], a)                              -- *2
 
-> traverse db (AndI (a,b) c) =                                            -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
->       (bvalid, bmsgs, buda, bconcl) = traverse db b                     -- *2
+> traverse' db (AndI (a,b) c) =                                            -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
+>       (bvalid, bmsgs, buda, bconcl) = traverse' db b                     -- *2
 >       (ok, msg) =                                                       -- *
 >         case c of                                                       -- *
 >	    And p q -> if (p==aconcl) && (q==bconcl)                      -- *
@@ -518,8 +518,8 @@ more concise.
 >       uda = auda `union` buda
 >   in  (valid, msgs, uda, c)
 
-> traverse db (AndEL a b) =                                               -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
+> traverse' db (AndEL a b) =                                               -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
 >       (ok,msg) =
 >         case aconcl of
 >           And p q -> if p == b then (True,[])
@@ -534,8 +534,8 @@ more concise.
 >       uda = auda
 >   in (valid, msgs, uda, b)
 
-> traverse db (AndER a b) =                                               -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
+> traverse' db (AndER a b) =                                               -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
 >       (ok,msg) =
 >         case aconcl of
 >           And p q -> if q == b then (True,[])
@@ -550,8 +550,8 @@ more concise.
 >       uda = auda
 >   in (valid, msgs, uda, b)
 
-> traverse db (OrIL a b) =                                                -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
+> traverse' db (OrIL a b) =                                                -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
 >       (ok,msg) =                                                        -- *
 >         case b of
 >           Or p q -> if aconcl == p then (True,[])
@@ -567,8 +567,8 @@ more concise.
 >       uda = auda
 >   in (valid, msgs, uda, b)
 
-> traverse db (OrIR a b) =                                                -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
+> traverse' db (OrIR a b) =                                                -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
 >       (ok,msg) =                                                        -- *
 >         case b of
 >           Or p q -> if aconcl == q then (True,[])
@@ -584,10 +584,10 @@ more concise.
 >       uda = auda
 >   in (valid, msgs, uda, b)
 
-> traverse db (OrE (a,b,c) d) =                                           -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
->       (bvalid, bmsgs, buda, bconcl) = traverse db b                     -- *2
->       (cvalid, cmsgs, cuda, cconcl) = traverse db c                     -- *2
+> traverse' db (OrE (a,b,c) d) =                                           -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
+>       (bvalid, bmsgs, buda, bconcl) = traverse' db b                     -- *2
+>       (cvalid, cmsgs, cuda, cconcl) = traverse' db c                     -- *2
 >       (ok,msg,uda) =                                                    -- *
 >         case aconcl of                                                  -- *
 >           Or p q -> let ok2 = p `elem` buda                             -- *
@@ -625,8 +625,8 @@ more concise.
 >       msgs = amsgs ++ bmsgs ++ cmsgs ++ msg                             -- *
 >   in (valid, msgs, uda, d)                                              -- *
 
-> traverse db (ImpI a b) =                                                -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
+> traverse' db (ImpI a b) =                                                -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
 >       (ok,msg) = match b                                                -- *1
 >       match x =                                                         -- *1
 >         case x of                                                       -- *1
@@ -655,9 +655,9 @@ more concise.
 >               otherwise -> auda
 >   in (valid, msgs, uda, b)
 
-> traverse db (ImpE (a,b) c) =                                            -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
->       (bvalid, bmsgs, buda, bconcl) = traverse db b                     -- *2
+> traverse' db (ImpE (a,b) c) =                                            -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
+>       (bvalid, bmsgs, buda, bconcl) = traverse' db b                     -- *2
 >       (ok,msg) = match bconcl                                           -- *1
 >       match x =                                                         -- *1
 >         case x of                                                       -- *1
@@ -684,8 +684,8 @@ more concise.
 >       uda = auda `union` buda
 >   in (valid, msgs, uda, c)
 
-> traverse db (ID a c) =                                                  -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
+> traverse' db (ID a c) =                                                  -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
 >       (ok,msg) = if aconcl == c                                         -- *
 >                    then (True,[])
 >                    else (False,[err1])
@@ -696,8 +696,8 @@ more concise.
 >       uda = auda                                                        -- *
 >   in (valid, msgs, uda, c)                                              -- *
 
-> traverse db (CTR a c) =                                                 -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
+> traverse' db (CTR a c) =                                                 -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
 >       (ok,msg) = if aconcl == FALSE                                     -- *
 >                   then (True,[])
 >                   else (False,[err1])
@@ -708,8 +708,8 @@ more concise.
 >       uda = auda                                                        -- *
 >   in (valid, msgs, uda, c)                                              -- *
 
-> traverse db (RAA a c) =                                                 -- *2
->   let (avalid, amsgs, auda, aconcl) = traverse db a                     -- *2
+> traverse' db (RAA a c) =                                                 -- *2
+>   let (avalid, amsgs, auda, aconcl) = traverse' db a                     -- *2
 >       (ok,msg) = if not ((c `Imp` FALSE) `elem` auda)                   -- *
 >                    then (False, [err1])
 >                    else if aconcl /= FALSE
@@ -729,11 +729,11 @@ more concise.
 (everything of chapter 2 that follows has been added as 2nd extension, and-- *2
  every line should be marked with-- *2)                                   -- *2
 
------------------------ traverse function for 'USE' ------------------------- *2
+----------------------- traverse' function for 'USE' ------------------------- *2
 
 Use assumes that the theorem is correct
 
-> traverse db (Use theo assums concl) =
+> traverse' db (Use theo assums concl) =
 >   let (oks, msgs, udas, concls) = checkproofs db assums
 >       err2 = "Use: the theorem " ++ show theo ++ " cannot be applied "
 >              ++ "with the assumptions " ++ show concls
@@ -745,9 +745,9 @@ Use assumes that the theorem is correct
 
 UseTh needs the proof of a theorem to check if it's valid and then can be used.
 
-> traverse db (UseTh (theo,proof) assums concl) =
+> traverse' db (UseTh (theo,proof) assums concl) =
 >       -- check if the theorem is valid
->   let (proofvalid, _, proofuda, proofconcl) = traverse db proof
+>   let (proofvalid, _, proofuda, proofconcl) = traverse' db proof
 >       (Theorem thas thc) = theo
 >       missingassum = setdif proofuda thas
 >       theook = proofvalid && (missingassum == []) && (proofconcl == thc)
@@ -767,7 +767,7 @@ UseTh needs the proof of a theorem to check if it's valid and then can be used.
 
 UseDB checks if a theorem can be used by looking for it in a data-base
 
-> traverse db (UseDB theo assums concl) =
+> traverse' db (UseDB theo assums concl) =
 >   let (oks, msgs, udas, concls) = checkproofs db assums
 >       err1 = "UseDB: there is no known theorem of which name is "
 >              ++ show theo ++ "\n"
@@ -790,7 +790,7 @@ their validity, the error messages and the undischarged assumptions
 > checkproofs :: TheoremDB -> [Proof] -> (Bool, [String], [Prop], [Prop])
 > checkproofs _ [] = (True, [], [], [])
 > checkproofs db (x:xs) =
->   let (okx,  msgx,  udasx,  cclx)  = traverse db x
+>   let (okx,  msgx,  udasx,  cclx)  = traverse' db x
 >       (okxs, msgxs, udasxs, cclxs) = checkproofs db xs
 >   in (okx && okxs, msgx ++ msgxs, udasx `union` udasxs, cclx:cclxs)
 
