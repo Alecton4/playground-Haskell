@@ -1,3 +1,6 @@
+# Avoid copyright problems
+docs/
+
 dist
 dist-*
 cabal-dev
