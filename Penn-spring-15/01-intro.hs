@@ -203,7 +203,7 @@ helloSame = hello1 == hello2
 -- The simplest possible list is the empty list.
 emptyList = []
 
--- Other lists are built up from the empty list using the cons operator, (`:`).
+-- Other lists are built up from the empty list using the cons operator, `(:)`.
 -- Cons takes an element and a list, and produces a new list with the element prepended to the front.
 ex18 = 1 : []
 
