@@ -340,9 +340,8 @@ foobar' = sum . map ((+ 2) . (* 7)) . filter (> 3)
 -- This is clearly not an improvement!
 
 -- Consider the following two functions:
-mumble = (`foldr` []) . ((:) .)
-
-grumble = zipWith ($) . repeat
+-- mumble = (`foldr` []) . ((:) .)
+-- grumble = zipWith ($) . repeat
 
 -- Can you figure out what these functions do?
 -- What if I told you that they are both equivalent to the `map` function.
