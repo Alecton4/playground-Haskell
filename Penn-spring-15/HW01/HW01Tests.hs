@@ -44,8 +44,22 @@ ex4Tests = []
 
 -- Exercise 5 -----------------------------------------
 
+testLuhn :: (Integer, Bool) -> Bool
+testLuhn (n, b) = luhn n == b
+
 ex5Tests :: [Test]
-ex5Tests = []
+ex5Tests =
+  [ Test
+      "luhn test"
+      testLuhn
+      [ (5594589764218858, True),
+        (1234567898765432, False),
+        (4419971795032571, True),
+        (5579684475492832, True),
+        (6011386277013436, True),
+        (344374835020854, True)
+      ]
+  ]
 
 -- Exercise 6 -----------------------------------------
 
