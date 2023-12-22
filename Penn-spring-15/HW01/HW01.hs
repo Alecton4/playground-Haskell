@@ -56,8 +56,38 @@ type Peg = String
 type Move = (Peg, Peg)
 
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi 1 startPeg endPeg tmpPeg = [(startPeg, endPeg)]
+hanoi 1 startPeg endPeg _ =
+  [(startPeg, endPeg)]
 hanoi n startPeg endPeg tmpPeg =
   hanoi (n - 1) startPeg tmpPeg endPeg
     ++ [(startPeg, endPeg)]
     ++ hanoi (n - 1) tmpPeg endPeg startPeg
+
+-- Exercise 7 -----------------------------------------
+
+-- BUG: This one seems wrong.
+hanoi4 :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
+hanoi4 1 startPeg endPeg _ _ =
+  [(startPeg, endPeg)]
+hanoi4 2 startPeg endPeg tmpPeg1 _ =
+  [(startPeg, tmpPeg1), (startPeg, endPeg), (tmpPeg1, endPeg)]
+hanoi4 n startPeg endPeg tmpPeg1 tmpPeg2 =
+  hanoi4 (n - 2) startPeg tmpPeg1 endPeg tmpPeg2
+    ++ [(startPeg, tmpPeg2)]
+    ++ [(startPeg, endPeg)]
+    ++ hanoi4 (n - 2) tmpPeg1 endPeg startPeg tmpPeg2
+
+-- NOTE: This one is not optimal.
+hanoi4' :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
+hanoi4' 1 startPeg endPeg _ _ =
+  [(startPeg, endPeg)]
+hanoi4' 2 startPeg endPeg tmpPeg1 _ =
+  [(startPeg, tmpPeg1), (startPeg, endPeg), (tmpPeg1, endPeg)]
+hanoi4' n startPeg endPeg tmpPeg1 tmpPeg2 =
+  hanoi4' (n - 2) startPeg tmpPeg1 endPeg tmpPeg2
+    ++ [(startPeg, tmpPeg2)]
+    ++ [(startPeg, endPeg)]
+    ++ [(tmpPeg2, endPeg)]
+    ++ hanoi4' (n - 2) tmpPeg1 endPeg startPeg tmpPeg2
+
+-- TODO: Implement the optimal one.
