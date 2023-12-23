@@ -75,12 +75,19 @@ filterCodes move = filter $ isConsistent move
 -- Exercise 6 -----------------------------------------
 
 allCodes :: Int -> [Code]
-allCodes n = undefined
+allCodes 1 = [[x] | x <- colors]
+allCodes n = [x : xs | x <- colors, xs <- allCodes (n - 1)]
 
 -- Exercise 7 -----------------------------------------
 
 solve :: Code -> [Move]
-solve = undefined
+solve secret = go [] (allCodes (length secret))
+  where
+    go :: [Move] -> [Code] -> [Move]
+    go moves [] =
+      moves
+    go moves (x : xs) =
+      go (moves ++ [getMove secret x]) (filterCodes (getMove secret x) xs)
 
 -- Bonus ----------------------------------------------
 
