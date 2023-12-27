@@ -1,6 +1,7 @@
 -- ================================
 -- function
 -- ================================
+
 doubleMe x = x + x
 
 -- Functions in Haskell don't have to be in any particular order,
@@ -34,6 +35,7 @@ conanO'Brien = "It's a-me, Conan O'Brien!"
 -- ================================
 -- list comprehension
 -- ================================
+
 boomBangs xs = [if x < 10 then "BOOM!" else "BANG!" | x <- xs, odd x]
 
 length' xs = sum [1 | _ <- xs]
@@ -49,6 +51,7 @@ rightTriangles'24 = [(a, b, c) | c <- [1 .. 10], b <- [1 .. c], a <- [1 .. b], a
 -- ================================
 -- type system
 -- ================================
+
 factorial :: Integer -> Integer
 factorial n = product [1 .. n]
 
@@ -76,6 +79,7 @@ testEq x y = x == y
 -- ================================
 -- pattern matching
 -- ================================
+
 luckyFour :: (Integral a) => a -> String
 luckyFour 4 = "LUCKY NUMBER FOUR!"
 luckyFour x = "Sorry, you're out of luck, pal!"
@@ -142,6 +146,7 @@ capital all@(x : xs) = "The first letter of " ++ all ++ " is " ++ [x]
 -- ================================
 -- guards
 -- ================================
+
 -- Whereas patterns are a way of making sure a value conforms to some form and deconstructing it,
 -- guards are a way of testing whether some property of a value (or several of them) are true or false.
 -- Guards are indicated by pipes that follow a function's name and its parameters.
@@ -174,6 +179,7 @@ a `compare'` b
 -- ================================
 -- `where` bindings
 -- ================================
+
 -- Note that `where` bindings aren't shared across function bodies of different patterns.
 -- If you want several patterns of one function to access some shared name, you have to define it globally.
 bmiTell''' :: (RealFloat a) => a -> a -> String
@@ -213,11 +219,13 @@ each with its own `where` clause.
 -- ================================
 -- `let` bindings
 -- ================================
+
 -- `let` bindings let you bind to variables anywhere
 -- and are expressions themselves, but are very local,
 -- so they don't span across guards.
 -- The difference is that `let` bindings are expressions themselves.
 -- `where` bindings are just syntactic constructs.
+
 demoLet = 4 * (let a = 9 in a + 1) + 2
 
 -- If we want to bind to several variables inline,
@@ -254,6 +262,7 @@ That way, the function body is closer to its name and type declaration and to so
 -- ================================
 -- case expressions
 -- ================================
+
 -- Pattern matching on parameters in function definitions is actually just syntactic sugar for case expressions.
 -- The following two pieces of code do the same thing and are interchangeable.
 headAgain [] = error "No head for empty lists!"
