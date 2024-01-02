@@ -147,6 +147,9 @@ length'' xs = fold addOne 0 xs
 -- In general, however, you should use `foldl'` from `Data.List` instead,
 -- which does the same thing as `foldl` but is more efficient.
 
+-- REF: https://www.arothuis.nl/posts/accumulators-and-folds/
+-- REF: https://wiki.haskell.org/Foldr_Foldl_Foldl'
+
 -- ================================
 -- functional programming
 -- ================================

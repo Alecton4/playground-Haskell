@@ -286,6 +286,8 @@ frob str
 -- because using `where` allows the programmer to get right to the point in defining what a function does,
 -- instead of setting up lots of local variables first.
 
+-- REF: https://wiki.haskell.org/Let_vs._Where
+
 -- ================================
 -- Haskell layout
 -- ================================
