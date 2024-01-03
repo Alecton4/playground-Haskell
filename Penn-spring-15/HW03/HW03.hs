@@ -33,16 +33,31 @@ type State = String -> Int
 
 -- Exercise 1 -----------------------------------------
 
+-- NOTE: review
 extend :: State -> String -> Int -> State
-extend = undefined
+extend st varName varVal = \varName' -> if varName == varName' then varVal else st varName'
 
 empty :: State
-empty = undefined
+empty _ = 0
 
 -- Exercise 2 -----------------------------------------
 
 evalE :: State -> Expression -> Int
-evalE = undefined
+evalE st expr = case expr of
+  Var varName -> st varName
+  Val varVal -> varVal
+  Op expr1 bop expr2 -> evalOp (evalE st expr1) bop (evalE st expr2)
+
+evalOp x bop y = case bop of
+  Plus -> x + y
+  Minus -> x - y
+  Times -> x * y
+  Divide -> x `div` y
+  Gt -> if x > y then 1 else 0
+  Ge -> if x >= y then 1 else 0
+  Lt -> if x < y then 1 else 0
+  Le -> if x <= y then 1 else 0
+  Eql -> if x == y then 1 else 0
 
 -- Exercise 3 -----------------------------------------
 
