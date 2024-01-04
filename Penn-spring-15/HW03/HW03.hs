@@ -35,7 +35,10 @@ type State = String -> Int
 
 -- NOTE: review
 extend :: State -> String -> Int -> State
-extend st varName varVal = \varName' -> if varName == varName' then varVal else st varName'
+extend st varName varVal = \varName' ->
+  if varName == varName'
+    then varVal
+    else st varName'
 
 empty :: State
 empty _ = 0
@@ -70,15 +73,35 @@ data DietStatement
   deriving (Show, Eq)
 
 desugar :: Statement -> DietStatement
-desugar = undefined
+desugar (Assign varName expr) = DAssign varName expr
+desugar (Incr varName) = DAssign varName (Op (Var varName) Plus (Val 1))
+desugar (If expr stmt1 stmt2) = DIf expr (desugar stmt1) (desugar stmt2)
+desugar (While expr stmt) = DWhile expr (desugar stmt)
+desugar (For stmtInit expr stmtUpdate stmtBody) = DSequence (desugar stmtInit) (DWhile expr (DSequence (desugar stmtBody) (desugar stmtUpdate)))
+desugar (Sequence stmt1 stmt2) = DSequence (desugar stmt1) (desugar stmt2)
+desugar (Skip) = DSkip
 
 -- Exercise 4 -----------------------------------------
 
 evalSimple :: State -> DietStatement -> State
-evalSimple = undefined
+evalSimple st stmt = case stmt of
+  DAssign varName expr ->
+    extend st varName (evalE st expr)
+  DIf expr stmt1 stmt2 ->
+    if evalE st expr /= 0
+      then evalSimple st stmt1
+      else evalSimple st stmt2
+  DWhile expr stmt ->
+    if evalE st expr /= 0
+      then evalSimple st (DSequence stmt (DWhile expr stmt))
+      else st
+  DSequence stmt1 stmt2 ->
+    evalSimple (evalSimple st stmt1) stmt2
+  DSkip ->
+    st
 
 run :: State -> Statement -> State
-run = undefined
+run st stmt = evalSimple st (desugar stmt)
 
 -- Programs -------------------------------------------
 
@@ -88,9 +111,9 @@ slist l = foldr1 Sequence l
 
 {- Calculate the factorial of the input
 
-   for (Out := 1; In > 0; In := In - 1) {
-     Out := In * Out
-   }
+  for (Out := 1; In > 0; In := In - 1) {
+    Out := In * Out
+  }
 -}
 factorial :: Statement
 factorial =
@@ -102,11 +125,11 @@ factorial =
 
 {- Calculate the floor of the square root of the input
 
-   B := 0;
-   while (A >= B * B) {
-     B++
-   };
-   B := B - 1
+  B := 0;
+  while (A >= B * B) {
+    B++
+  };
+  B := B - 1
 -}
 squareRoot :: Statement
 squareRoot =
@@ -120,22 +143,22 @@ squareRoot =
 
 {- Calculate the nth Fibonacci number
 
-   F0 := 1;
-   F1 := 1;
-   if (In == 0) {
-     Out := F0
-   } else {
-     if (In == 1) {
-       Out := F1
-     } else {
-       for (C := 2; C <= In; C++) {
-         T  := F0 + F1;
-         F0 := F1;
-         F1 := T;
-         Out := T
-       }
-     }
-   }
+  F0 := 1;
+  F1 := 1;
+  if (In == 0) {
+    Out := F0
+  } else {
+    if (In == 1) {
+      Out := F1
+    } else {
+      for (C := 2; C <= In; C++) {
+        T  := F0 + F1;
+        F0 := F1;
+        F1 := T;
+        Out := T
+      }
+    }
+  }
 -}
 fibonacci :: Statement
 fibonacci =
