@@ -12,6 +12,8 @@
 -- REF: https://bartoszmilewski.com/2014/09/22/parametricity-money-for-nothing-and-theorems-for-free/
 -- REF: https://wiki.haskell.org/Polymorphism
 -- REF: https://wiki.haskell.org/Generics
+-- REF: https://www.cs.cornell.edu/courses/cs2112/2022fa/lectures/#generics
+-- REF: https://www.reddit.com/r/golang/comments/hpcpsw/difference_between_generics_and_parametric/
 
 -- There are many deep and profound consequences of parametricity.
 -- One consequence is something called type erasure.
