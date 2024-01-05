@@ -33,13 +33,13 @@ exactMatches xs ys = sum (zipWith (\x y -> if x == y then 1 else 0) xs ys)
 
 -- For each peg in xs, count how many times is occurs in ys
 countColors :: Code -> [Int]
--- From Phind:
--- > `map` applies the lambda function to each `Peg` in `colors`.
--- > The lambda function uses `filter` to create a list of elements in `code`
--- > that are equal to `color`,
--- > and `length` to count the number of elements in this list.
--- > The result is a list of counts of each `Peg` in `code`,
--- > in the same order as `colors`.
+{-
+From Phind:
+> `map` applies the lambda function to each `Peg` in `colors`.
+> The lambda function uses `filter` to create a list of elements in `code that are equal to `color`,
+> and `length` to count the number of elements in this list.
+> The result is a list of counts of each `Peg` in `code`, in the same order as `colors`.
+-}
 countColors code = map (\color -> length (filter (== color) code)) colors
 
 -- `countColors` can be separated into two functions:

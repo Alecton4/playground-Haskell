@@ -201,9 +201,11 @@ failureToZero' x = case x of
   Failure -> 0
   OK d -> d
 
--- From Phind:
--- > It's more typical to use case expressions when you're dealing with algebraic data types (like Maybe or Either),
--- > not simple integers.
+{-
+From Phind:
+> It's more typical to use case expressions when you're dealing with algebraic data types (like Maybe or Either),
+> not simple integers.
+-}
 
 -- ================================
 -- polymorphic data types

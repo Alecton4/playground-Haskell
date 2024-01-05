@@ -101,9 +101,10 @@ head' [] = error "Can't call head on an empty list, dummy!"
 -- Notice that if you want to bind to several variables
 -- (even if one of them is just `_` and doesn't actually bind at all),
 -- we have to surround them in parentheses.
--- From Phind:
--- > `head' x : _ = x` will be problematic
--- > because Haskell will interpret it as `(head' x) : _ = x`.
+{-
+From Phind:
+> `head' x : _ = x` will be problematic because Haskell will interpret it as `(head' x) : _ = x`.
+-}
 head' (x : _) = x
 
 inspectList :: (Show a) => [a] -> String
@@ -135,11 +136,13 @@ capital all@(x : xs) = "The first letter of " ++ all ++ " is " ++ [x]
 -- what would be in the first and what would be in the second list? It doesn't make much sense.
 -- It would make sense to match stuff against `(xs ++ [x,y,z])` or just `(xs ++ [x])`,
 -- but because of the nature of lists, you can't do that.
--- From Phind:
--- > Pattern matching in Haskell works by matching the structure of data,
--- > not by executing code or expressions.
--- > The `++` operator is a function that concatenates two lists,
--- > and it doesn't represent a structure that can be matched.
+{-
+From Phind:
+> Pattern matching in Haskell works by matching the structure of data,
+> not by executing code or expressions.
+> The `++` operator is a function that concatenates two lists,
+> and it doesn't represent a structure that can be matched.
+-}
 -- firstOne ([x] ++ xs) = x
 -- lastOne (xs ++ [x]) = x
 
